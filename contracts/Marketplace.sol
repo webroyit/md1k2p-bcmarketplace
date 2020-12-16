@@ -21,8 +21,36 @@ contract Marketplace{
         bool purchased;
     }
 
+    event ProductCreated(
+        uint id,
+        string name,
+        uint price,
+        address payable owner,
+        bool purchased
+    );
+
     // It get run only once when the contract is deployed
     constructor() public{
         name = "Drink Place";
+    }
+
+    // '_' to represent local variables
+    function createProduct(string memory _name, uint _price) public {
+        // Name cannot be empty
+        require(bytes(_name).length > 0);
+
+        // Price must be greater than 0
+        require(_price > 0);
+
+        // Increment productCount
+        productCount++;
+
+        // Create the product
+        // 'msg.sender' is the address of someone who calls this function
+        products[productCount] = Product(productCount, _name, _price, msg.sender, false);
+
+        // To log out the product
+        // Trigger an event
+        emit ProductCreated(productCount, _name, _price, msg.sender, false);
     }
 }
