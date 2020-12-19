@@ -4,12 +4,14 @@ import './App.css';
 
 import Marketplace from './abis/Marketplace.json';
 import Navbar from './component/Navbar';
+import Main from './component/Main';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      account: ''
+      account: '',
+      loading: true
     }
   }
   async componentWillMount(){
@@ -52,8 +54,10 @@ class App extends Component {
 
       // Load the contract from blockchain
       const marketplace = new web3.eth.Contract(abi, address);
-
       this.setState({ marketplace });
+
+      this.setState({ loading: false });
+
     }else{
       window.alert('Contract is not deployed to detected network');
     }
@@ -63,7 +67,16 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar account={this.state.account} />
-        <h1 className="text-center mt-5">Marketplace</h1>
+        <div className="container-fluid mt-5">
+          <div className="row">
+            <main role="main" className="col-lg-12 d-flex">
+              { this.state.loading
+                ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
+                : <Main />
+              }
+            </main>
+          </div>
+        </div>
       </div>
     );
   }
