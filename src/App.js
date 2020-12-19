@@ -13,6 +13,8 @@ class App extends Component {
       account: '',
       loading: true
     }
+    // To let react know that this function is the same as the function that was define here
+    this.createProduct = this.createProduct.bind(this);
   }
   async componentWillMount(){
     await this.loadWeb3();
@@ -63,6 +65,17 @@ class App extends Component {
     }
   }
 
+  createProduct(name, price){
+    this.setState({ loading: true });
+
+    // 'methods' to use functions on the smart contract
+    // 'send()' is for tranactions,  pass meta data such as wallet address
+    this.state.marketplace.methods.createProduct(name, price).send({ from: this.state.account })
+      .once('receipt', (receipt) => {
+        this.setState({ loading: false });
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -72,7 +85,7 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex">
               { this.state.loading
                 ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
-                : <Main />
+                : <Main createProduct={this.createProduct}/>
               }
             </main>
           </div>
