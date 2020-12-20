@@ -17,6 +17,7 @@ class App extends Component {
     }
     // To let react know that this function is the same as the function that was define here
     this.createProduct = this.createProduct.bind(this);
+    this.purchaseProduct = this.purchaseProduct.bind(this);
   }
   async componentWillMount(){
     await this.loadWeb3();
@@ -90,6 +91,14 @@ class App extends Component {
       });
   }
 
+  purchaseProduct(id, price){
+    this.setState({ loading: true });
+    this.state.marketplace.methods.purchaseProduct(id).send({ from: this.state.account, value: price })
+      .once('receipt', (receipt) => {
+        this.setState({ loading: false });
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -99,7 +108,7 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex">
               { this.state.loading
                 ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
-                : <Main createProduct={this.createProduct} products={this.state.products} />
+                : <Main createProduct={this.createProduct} purchaseProduct={this.purchaseProduct} products={this.state.products} />
               }
             </main>
           </div>

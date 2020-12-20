@@ -55,9 +55,12 @@ class Main extends Component {
                                 <td>{window.web3.utils.fromWei(product.price.toString())} Eth</td>
                                 <td>{product.owner}</td>
                                 <td>
-                                    <button className="btn btn-outline-warning" name={product.id} value={product.price}>
-                                        Buy
-                                    </button>
+                                    { !product.purchased
+                                        ? <button className="btn btn-outline-warning" name={product.id} value={product.price} 
+                                            onClick={(event) => {
+                                                this.props.purchaseProduct(event.target.name, event.target.value);
+                                            }}>Buy</button>
+                                        : null }
                                 </td>
                             </tr>
                         )
