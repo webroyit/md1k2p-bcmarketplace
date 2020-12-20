@@ -34,6 +34,36 @@ class Main extends Component {
                 </div>
                 <button type="submit" className="btn btn-warning">Add Product</button>
             </form>
+            <p>&nbsp;</p>
+            <h2>Buy Product</h2>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="productList">
+                    { this.props.products.map((product, key) => {
+                        return(
+                            <tr key={key}>
+                                <th scope="row">{product.id.toString()}</th>
+                                <td>{product.name}</td>
+                                <td>{window.web3.utils.fromWei(product.price.toString())} Eth</td>
+                                <td>{product.owner}</td>
+                                <td>
+                                    <button className="btn btn-outline-warning" name={product.id} value={product.price}>
+                                        Buy
+                                    </button>
+                                </td>
+                            </tr>
+                        )
+                    }) }
+                </tbody>
+            </table>
         </div>
     );
   }

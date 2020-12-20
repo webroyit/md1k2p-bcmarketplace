@@ -11,6 +11,8 @@ class App extends Component {
     super(props);
     this.state = {
       account: '',
+      productCount: 0,
+      products: [],
       loading: true
     }
     // To let react know that this function is the same as the function that was define here
@@ -58,6 +60,18 @@ class App extends Component {
       const marketplace = new web3.eth.Contract(abi, address);
       this.setState({ marketplace });
 
+      // 'call()' is to read data
+      const productCount = await marketplace.methods.productCount().call();
+      this.setState({ productCount });
+
+      // Get products from the blockchain
+      for(let i = 1; i <= productCount; i++){
+        const product = await marketplace.methods.products(i).call();
+        this.setState({
+          products: [...this.state.products, product]
+        })
+      }
+
       this.setState({ loading: false });
 
     }else{
@@ -85,7 +99,7 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex">
               { this.state.loading
                 ? <div id="loader" className="text-center"><p className="text-center">Loading...</p></div>
-                : <Main createProduct={this.createProduct}/>
+                : <Main createProduct={this.createProduct} products={this.state.products} />
               }
             </main>
           </div>
